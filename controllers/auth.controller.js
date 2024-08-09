@@ -1,5 +1,6 @@
 import bcryptjs from 'bcryptjs';
 import User from '../models/user.model.js';
+import Class from '../models/class.model.js';
 import { genToken, fMsg } from '../utils/libby.js';
 
 
@@ -7,9 +8,13 @@ import { genToken, fMsg } from '../utils/libby.js';
 export const signup = async (req, res) => {
     try {
 
-        const {username,email, password,confirmPassword,role} = req.body;
+        const {username,email, password,confirmPassword,role,classcode} = req.body;
+        const foundClass = await Class.findOne({ classcode });
+        if(!foundClass){
+            return fMsg(res, "ClassCode Error", null);
+        }
+        if(!username || !email || !password || !confirmPassword || !role || !classcode){
 
-        if(!username || !email || !password || !confirmPassword || !role){
             return fMsg(res, "All fields are required", null);
         }
         if (password !== confirmPassword) {
@@ -46,6 +51,17 @@ export const signup = async (req, res) => {
                 role:newUser.role,
 
             });
+       
+       
+        
+        await Class.findByIdAndUpdate(foundClass._id,{$push:{parentIds:newUser._id}});
+        
+       
+
+
+
+          
+
         }else{
             return res.status(400).json({ message: 'User not created' });
         }
