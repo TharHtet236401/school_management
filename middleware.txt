@@ -1,0 +1,50 @@
+const express = require('express');
+const path = require('path'); // Added this line
+
+const app = express();
+
+
+
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
+
+app.get("/", (req, res) => {
+    res.status(200).json({ message: "Hello World" });
+});
+
+
+
+let output = (req, res, next) => {
+    console.log("This is the output");
+    next();
+};
+
+let input = (req,res,next)=>{
+    console.log("This is the input")
+    next()
+}
+
+
+
+app.use("/cats", output, input, (req, res, next) => {
+    next(new Error("This is the custom error message"))
+});
+
+
+app.use((err,req,res,next)=>{
+    err.status = err.status || 505;
+    res.status(err.status).json({con:false,"message":err.message})
+})
+
+//must be bottom of your all route definitions
+app.get("*", (req, res) => {
+    res.status(200).json({ message: "Invalid Route" });
+});
+
+
+
+
+app.listen(3000, () => {
+    console.log(`The port is connected at the port 3000`);
+});
