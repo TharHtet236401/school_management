@@ -20,7 +20,14 @@ export const createClass = async (req, res) => {
 
 export const getAllClasses = async (req, res) => {
   try{
-    const classes = await Class.find().select("-__v -createdAt -updatedAt")
+    const classes = await Class.find().select("-__v -createdAt -updatedAt").populate({
+        path: "studentIds",
+        select: "-password -__v -createdAt -updatedAt -class",
+        populate: {
+            path: "parentIds",
+            select: "-password -__v -createdAt -updatedAt"
+        }
+    });
     fMsg(res, "Classes fetched successfully", classes)
   }catch(error){
     console.log("Error in getAllClasses", error.message);

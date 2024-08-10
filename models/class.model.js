@@ -16,10 +16,6 @@ const classSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Student'
   }],
-  parentIds: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Parent'
-  }],
   classcode: {
     type: String,
     required: true,
