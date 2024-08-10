@@ -16,7 +16,7 @@ export const signup = async (req, res) => {
         if(!foundClass){
             return fMsg(res, "ClassCode Error", null);
         }
-        if(!username || !email || !password || !confirmPassword || !role || !classcode){
+        if(!username || !email || !password || !confirmPassword || !role || !classcode || !studentname || !age || !address){
 
             return fMsg(res, "All fields are required", null);
         }

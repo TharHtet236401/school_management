@@ -12,10 +12,13 @@ app.use(express.json())
 import authRouter from "./routes/auth.routes.js"
 import userRouter from "./routes/user.routes.js"
 import classRouter from "./routes/class.routes.js"
+import studentRouter from "./routes/student.routes.js"
 
 app.use("/api/auth",authRouter)
 app.use("/api/users",userRouter)
 app.use("/api/class",classRouter)
+app.use("/api/student",studentRouter)
+
 
 
 app.get("*",(req,res)=>{
