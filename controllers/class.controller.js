@@ -99,3 +99,22 @@ export const addTeacherToClass = async(req, res) => {
         fMsg(res, "Internal Server Error", error.message);
     }
 }
+
+export const removeTeacherFromClass = async(req, res) => {
+  try{
+    const classExists = await Class.findById(req.params.id)
+    const teacher = await User.findById(req.body.teacherId)
+    if(!classExists){
+      return fMsg(res, "Class not found", {message:error.message})
+    }
+    if(!teacher){
+      return fMsg(res, "Teacher not found", {message:error.message})
+    }
+    classExists.teacherId = classExists.teacherId.filter(id => id.toString() !== teacher._id.toString())
+    await classExists.save()
+    fMsg(res, "Teacher removed from class successfully", classExists)
+  }catch(error){
+    console.log("Error in removeTeacherFromClass", error.message);
+    fMsg(res, "Internal Server Error", error.message);
+  }
+} 

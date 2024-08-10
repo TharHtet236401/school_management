@@ -37,7 +37,7 @@ export let isAdmin = (req,res,next)=>{
     if(req.body.user.role === "admin"){    
         next()
     }else{
-        fMsg(res,"Unauthorized","You are not authorized to access this resource")
+        fMsg(res,"Unauthorized","You are not authorized to do this action")
     }
 }
 
@@ -45,6 +45,6 @@ export let isTeacher = (req,res,next)=>{
     if(req.body.user.role === "teacher" || req.body.user.role === "admin" ){
         next()
     }else{
-        fMsg(res,"Unauthorized","You are not authorized to access this resource")
+        fMsg(res,"Unauthorized","You are not authorized to do this action")
     }
 }
