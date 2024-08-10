@@ -1,5 +1,7 @@
 import bcryptjs from 'bcryptjs';
 import User from '../models/user.model.js';
+import Class from '../models/class.model.js';
+import Student from '../models/student.model.js';
 import { genToken, fMsg } from '../utils/libby.js';
 
 
@@ -7,9 +9,15 @@ import { genToken, fMsg } from '../utils/libby.js';
 export const signup = async (req, res) => {
     try {
 
-        const {username,email, password,confirmPassword,role} = req.body;
+        const {username,email, password,confirmPassword,role,classcode} = req.body;
+        const {studentname,age,address} = req.body;
+        console.log(req.body);  
+        const foundClass = await Class.findOne({ classcode });
+        if(!foundClass){
+            return fMsg(res, "ClassCode Error", null);
+        }
+        if(!username || !email || !password || !confirmPassword || !role || !classcode || !studentname || !age || !address){
 
-        if(!username || !email || !password || !confirmPassword || !role){
             return fMsg(res, "All fields are required", null);
         }
         if (password !== confirmPassword) {
@@ -23,11 +31,7 @@ export const signup = async (req, res) => {
         //hash password//
         const salt = await bcryptjs.genSalt(10);
         const hashedPassword = await bcryptjs.hash(password, salt);
-        console.log(hashedPassword);
-
         
-      
-    
         const newUser = new User(
             {
                 username,
@@ -36,6 +40,22 @@ export const signup = async (req, res) => {
                 role: role
             }
         );
+        console.log(newUser);
+
+        const newStudent = new Student({
+            studentname,
+            age,    
+            address,
+            class:foundClass._id,
+        })
+
+        console.log(newStudent);
+
+        if (newStudent) {
+            await newStudent.save();
+            await Class.findByIdAndUpdate(foundClass._id,{$push:{studentIds:newStudent._id}});
+            await Student.findByIdAndUpdate(newStudent._id,{$push:{parentIds:newUser._id}});
+        }
 
         if (newUser) {
             await newUser.save();
@@ -46,6 +66,17 @@ export const signup = async (req, res) => {
                 role:newUser.role,
 
             });
+       
+       
+        
+        await Class.findByIdAndUpdate(foundClass._id,{$push:{parentIds:newUser._id}});
+        
+       
+
+
+
+          
+
         }else{
             return res.status(400).json({ message: 'User not created' });
         }

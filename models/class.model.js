@@ -8,17 +8,13 @@ const classSchema = new Schema({
     required: true,
     unique: true
   },
-  teacherId: {
+  teacherId: [{
     type: Schema.Types.ObjectId,
     ref: 'User',
-  },
+  }],
   studentIds: [{
     type: Schema.Types.ObjectId,
     ref: 'Student'
-  }],
-  parentIds: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Parent'
   }],
   classcode: {
     type: String,

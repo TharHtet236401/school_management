@@ -3,14 +3,13 @@ const Schema = mongoose.Schema;
 
 // Define the Student schema
 const studentSchema = new Schema({
-  name: {
+  studentname: {
     type: String,
     required: true
   },
   class: {
     type: Schema.Types.ObjectId,
     ref: 'Class',
-    required: true
   },
   age: {
     type: String,

@@ -5,8 +5,7 @@ import bcrypt from 'bcryptjs';
 export const getAllUsers = async (req, res) => {
     try{
         let users = await User.find().select("-password -createdAt -updatedAt -__v");
-    
-        fMsg(res, `Users fetched successfully by ${req.body.user.role} (${req.body.user.username})`, users);
+        fMsg(res, 'user fetched successfully', users);
      
     }catch(error){
         console.log("Error in getAllUsers", error.message);

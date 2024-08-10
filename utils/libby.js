@@ -32,7 +32,7 @@ export let validateToken = () => {
 
 
 export let isAdmin = (req,res,next)=>{
-    console.log(req.body)
+   
     console.log("above role")
     if(req.body.user.role === "admin"){    
         next()
